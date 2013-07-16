@@ -4,14 +4,20 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/stephenalexbrowne/models-example/controllers"
+	"github.com/stephenalexbrowne/models-example/model_lib"
 	"github.com/stephenalexbrowne/models-example/models"
+	"log"
 	"net/http"
 )
 
 func main() {
 	port := "6060"
 
-	defer models.CloseDb()
+	err := models.Initialize()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer model_lib.CloseDb()
 
 	r := route()
 
