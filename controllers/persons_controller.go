@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/stephenalexbrowne/models-example/models"
+	"github.com/stephenalexbrowne/zoom"
+	"github.com/stephenalexbrowne/zoom_example/models"
 	"net/http"
 	"strconv"
 )
@@ -29,19 +30,22 @@ func (*PersonsController) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, msg, 400)
 		return
 	}
-	ageInt, err := strconv.Atoi(age)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
 
-	p := models.NewPerson(name, ageInt)
-	result, err := p.Save()
+	ageInt, err := strconv.Atoi(age)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	personJson, err := json.Marshal(result)
+	p := models.NewPerson(name, ageInt)
+	err = p.Save()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	personJson, err := json.Marshal(p)
+	fmt.Println("personJson: ", personJson)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -89,6 +93,31 @@ func (*PersonsController) Delete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	fmt.Println("PersonsController#Update() was called.")
 
-	fmt.Fprint(w, "persons.delete")
-	// TODO: implement this
+	// get the Id from the url muxer
+	vars := mux.Vars(r)
+	personId := vars["Id"]
+	if personId == "" {
+		http.Error(w, "Missing required paramater: Id", 400)
+		return
+	}
+
+	result, err := zoom.FindById("person", personId)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	p := result.(*models.Person)
+	err = p.Delete()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	personJson, err := json.Marshal(p)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprint(w, string(personJson))
 }

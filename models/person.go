@@ -1,34 +1,26 @@
 package models
 
 import (
-	lib "github.com/stephenalexbrowne/models-example/model_lib"
+	"github.com/stephenalexbrowne/zoom"
 )
 
 type Person struct {
 	Name string
 	Age  int
-	*lib.Model
+	*zoom.Model
 }
 
 func NewPerson(name string, age int) *Person {
-	return &Person{name, age, &lib.Model{}}
-}
-
-func (p *Person) Save() (*Person, error) {
-	// invoke the general saver
-	result, err := lib.Save(*p)
-	if err != nil {
-		return nil, err
-	}
-	pers := result.(Person)
-	return &pers, nil
+	p := &Person{Name: name, Age: age}
+	p.Model = zoom.NewModelFor(p)
+	return p
 }
 
 func FindPersonById(id string) (*Person, error) {
-	result, err := lib.FindById("person", id)
+	result, err := zoom.FindById("person", id)
 	if err != nil {
 		return nil, err
 	}
-	p := result.(Person)
-	return &p, nil
+	p := result.(*Person)
+	return p, nil
 }

@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/stephenalexbrowne/models-example/controllers"
-	"github.com/stephenalexbrowne/models-example/model_lib"
-	"github.com/stephenalexbrowne/models-example/models"
+	"github.com/stephenalexbrowne/zoom_example/controllers"
+	"github.com/stephenalexbrowne/zoom_example/models"
+	"github.com/stephenalexbrowne/zoom"
 	"log"
 	"net/http"
 )
@@ -17,7 +17,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer model_lib.CloseDb()
+	defer zoom.CloseDb()
 
 	r := route()
 

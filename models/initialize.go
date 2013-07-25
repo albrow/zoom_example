@@ -1,18 +1,22 @@
 package models
 
 import (
-	lib "github.com/stephenalexbrowne/models-example/model_lib"
+	"github.com/stephenalexbrowne/zoom"
+	"time"
 )
 
 func Initialize() error {
+	config := zoom.DbConfig{
+		Timeout:  10 * time.Second,
+		Database: 7,
+		PoolSize: 99999,
+	}
+	zoom.InitDb(config)
 
-	lib.InitDb()
-
-	err := lib.Register(Person{}, "person")
+	err := zoom.Register(&Person{}, "person")
 	if err != nil {
 		return err
 	}
 
 	return nil
-
 }
