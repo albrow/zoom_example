@@ -2,14 +2,14 @@ package models
 
 import (
 	"github.com/stephenalexbrowne/zoom"
-	"time"
 )
 
 func Initialize() error {
 	config := zoom.DbConfig{
-		Timeout:  10 * time.Second,
-		Database: 7,
-		PoolSize: 99999,
+		Database:   7,
+		PoolSize:   999,
+		UseSockets: true,
+		Address:    "/tmp/redis.sock",
 	}
 	zoom.InitDb(config)
 
