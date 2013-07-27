@@ -14,7 +14,6 @@ type PersonsController struct{}
 
 func (*PersonsController) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	fmt.Println("PersonsController#Create() was called.")
 
 	// get the Name and Age from the form data
 	name := r.FormValue("Name")
@@ -38,14 +37,13 @@ func (*PersonsController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p := models.NewPerson(name, ageInt)
-	err = p.Save()
+	err = zoom.Save(p)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	personJson, err := json.Marshal(p)
-	fmt.Println("personJson: ", personJson)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -56,7 +54,6 @@ func (*PersonsController) Create(w http.ResponseWriter, r *http.Request) {
 
 func (*PersonsController) Update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	fmt.Println("PersonsController#Update() was called.")
 
 	fmt.Fprint(w, "persons.update")
 	// TODO: implement this
@@ -64,7 +61,6 @@ func (*PersonsController) Update(w http.ResponseWriter, r *http.Request) {
 
 func (*PersonsController) Show(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	fmt.Println("PersonsController#Show() was called.")
 
 	// get the Id from the url muxer
 	vars := mux.Vars(r)
@@ -91,7 +87,6 @@ func (*PersonsController) Show(w http.ResponseWriter, r *http.Request) {
 
 func (*PersonsController) Delete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	fmt.Println("PersonsController#Update() was called.")
 
 	// get the Id from the url muxer
 	vars := mux.Vars(r)
@@ -107,7 +102,7 @@ func (*PersonsController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p := result.(*models.Person)
-	err = p.Delete()
+	err = zoom.Delete(p)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
