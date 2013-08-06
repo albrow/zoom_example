@@ -5,7 +5,7 @@ import (
 )
 
 func Initialize() error {
-	zoom.Init()
+	zoom.Init(nil)
 
 	err := zoom.Register(&Person{}, "person")
 	if err != nil {
