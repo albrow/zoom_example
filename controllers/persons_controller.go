@@ -12,6 +12,24 @@ import (
 
 type PersonsController struct{}
 
+func (*PersonsController) Index(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	persons, err := models.FindAllPersons()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	personsJson, err := json.Marshal(persons)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprint(w, string(personsJson))
+}
+
 func (*PersonsController) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 

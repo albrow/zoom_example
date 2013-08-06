@@ -33,6 +33,7 @@ func route() *mux.Router {
 	// persons
 	personsController := controllers.PersonsController{}
 	r.HandleFunc("/persons", personsController.Create).Methods("POST")
+	r.HandleFunc("/persons", personsController.Index).Methods("GET")
 	r.HandleFunc("/persons/{Id}", personsController.Update).Methods("PUT")
 	r.HandleFunc("/persons/{Id}", personsController.Show).Methods("GET")
 	r.HandleFunc("/persons/{Id}", personsController.Delete).Methods("DELETE")
