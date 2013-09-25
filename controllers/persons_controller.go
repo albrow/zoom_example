@@ -119,12 +119,11 @@ func (*PersonsController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := zoom.FindById("person", personId)
+	p, err := models.FindPersonById(personId)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	p := result.(*models.Person)
 	err = zoom.Delete(p)
 	if err != nil {
 		http.Error(w, err.Error(), 500)

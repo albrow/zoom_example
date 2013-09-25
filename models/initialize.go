@@ -5,7 +5,11 @@ import (
 )
 
 func Initialize() error {
-	zoom.Init(nil)
+	zoom.Init(&zoom.Configuration{
+		Database: 2,
+		Network:  "unix",
+		Address:  "/tmp/redis.sock",
+	})
 
 	err := zoom.Register(&Person{}, "person")
 	if err != nil {
